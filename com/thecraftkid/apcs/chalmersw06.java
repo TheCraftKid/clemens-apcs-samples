@@ -29,6 +29,11 @@ public class chalmersw06 {
         displayGrades(student1, student2, student3, student4, student5);
     }
 
+    /**
+     * Prints out the given students information using {@link Student#toString()}.
+     *
+     * @param students The students whose grades to display
+     */
     private static void displayGrades(Student... students) {
         System.out.println();
         for (Student student : students) {
@@ -36,9 +41,14 @@ public class chalmersw06 {
         }
     }
 
+    /**
+     * Recalculates the grade for each student using {@link Student#addExtraCredit()}.
+     *
+     * @param students A set of students to add extra credit to
+     */
     private static void recalculateGrades(Student... students) {
         for (Student student : students) {
-            student.addExtraCredit(Student.getVariation());
+            student.addExtraCredit();
         }
     }
 
@@ -80,7 +90,7 @@ public class chalmersw06 {
         /**
          * @return Random value between 5 to 10
          */
-        public static int getVariation() {
+        public static int getRandomExtraCredit() {
             return (int) (Math.random() * 6 + 5);
         }
 
@@ -103,6 +113,34 @@ public class chalmersw06 {
             return (int) (Math.random() * 40) + 60;
         }
 
+        /**
+         * Adds the given number of points to this student's second test grade.
+         *
+         * @param credit The amount of points to add
+         */
+        public void addExtraCredit(int credit) {
+            testGrades[1] += credit;
+            setTestAverage(calculateTestAverage(testGrades));
+        }
+
+        /**
+         * Adds five extra points to this student's second test grade.
+         */
+        public void addExtraCredit() {
+            testGrades[1] += getRandomExtraCredit();
+            setTestAverage(calculateTestAverage(testGrades));
+        }
+
+        /**
+         * Returns this student's test grades and its average in a human-readable format.
+         */
+        @Override
+        public String toString() {
+            return String.format("%s - Test 1: %s\tTest 2: %s\tTest 3: %s\t-- Average: %s",
+                    getId(), getTestGrades()[0], getTestGrades()[1], getTestGrades()[2],
+                    (int) getTestAverage());
+        }
+
         public String getId() {
             return id;
         }
@@ -117,26 +155,6 @@ public class chalmersw06 {
 
         public void setTestAverage(double testAverage) {
             this.testAverage = testAverage;
-        }
-
-        /**
-         * Adds five extra points to this student's second test grade.
-         *
-         * @param credit The amount of points to add
-         */
-        public void addExtraCredit(int credit) {
-            testGrades[1] += credit;
-            setTestAverage(calculateTestAverage(testGrades));
-        }
-
-        /**
-         * Returns this student's test grades and its average in a human-readable format.
-         */
-        @Override
-        public String toString() {
-            return String.format("%s - Test 1: %s\tTest 2: %s\tTest 3: %s\t-- Average: %s",
-                    getId(), getTestGrades()[0], getTestGrades()[1], getTestGrades()[2],
-                    (int) getTestAverage());
         }
     }
 
