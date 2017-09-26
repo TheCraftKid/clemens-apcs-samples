@@ -29,6 +29,9 @@ public class chalmersw05 {
         tracker.printAverage();
     }
 
+    /**
+     * A utility object that keeps track of the collected grades.
+     */
     static class GradeTracker {
 
         private List<Integer> mGrades = new ArrayList<>();
@@ -36,7 +39,7 @@ public class chalmersw05 {
         private static final int TOTAL_POINTS = 40;
 
         /**
-         * Uses the given scanner to fetch the next score (an int)
+         * Uses the given scanner to fetch the next score (an int).
          */
         public void requestNextScore(Scanner scanner) {
             System.out.print("\nWhat grade did you get on this lab?    ");
@@ -44,6 +47,7 @@ public class chalmersw05 {
         }
 
         /**
+         * Returns the sum of all the grades collected by this tracker.
          * </p>
          * In reality, this should be private.
          *
@@ -57,15 +61,24 @@ public class chalmersw05 {
             return total;
         }
 
+        /**
+         * Finds and returns the average of the grades this tracker's collected.
+         */
         public double calculateAverage() {
             return calculateTotalPoints() / mGrades.size();
         }
 
+        /**
+         * Prints this tracker's total points to standard output.
+         */
         public void printPoints() {
             System.out.println(String.format(
                     "\nYour lab points are %s out of %s", calculateTotalPoints(), TOTAL_POINTS));
         }
 
+        /**
+         * Prints the average out of 100 of the grades collected.
+         */
         public void printAverage() {
             System.out.println("Your lab average is " + (int) calculateAverage() * 10);
         }

@@ -6,7 +6,8 @@ for a while. It will be obvious you are copy-pasting code and don't know what yo
 ## Usage
 To simply run the labs, open IntelliJ in the root directory and run the configuration for the lab
 that needs to be run; the run configuration will automatically generate the class files. Without 
-IntelliJ, use the `javac` compiler and use the `java` CLI tools to run the generated class files.
+IntelliJ, use the `javac` compiler to build the `com.thecraftkid.apcs` package into the `build/`
+folder and use the `java` CLI tools to run the generated class files.
 
 ## Other notes
 While Java's standard convention is to capitalize class names, I couldn't do so as my teacher
