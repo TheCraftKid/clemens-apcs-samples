@@ -5,7 +5,7 @@ import static com.thecraftkid.apcs.chalmersw06.Student.getRandomGrade;
 
 /**
  * A program that instantiates five {@link Student} objects with a random five digit student ID and
- * three random test grades
+ * three random test grades.
  *
  * @author Willie Chalmers III
  * @since 9/18/17
