@@ -1,8 +1,5 @@
 package com.thecraftkid.apcs;
 
-import static com.thecraftkid.apcs.chalmersw06.Student.generateStudentId;
-import static com.thecraftkid.apcs.chalmersw06.Student.getRandomGrade;
-
 /**
  * A program that instantiates five {@link Student} objects with a random five digit student ID and
  * three random test grades.
@@ -14,16 +11,11 @@ public class chalmersw06 {
 
     public static void main(String[] args) {
         System.out.println("Mr. Burton\nLab 6 - 10 point version");
-        Student student1 = new Student(generateStudentId(), getRandomGrade(),
-                getRandomGrade(), getRandomGrade());
-        Student student2 = new Student(generateStudentId(), getRandomGrade(),
-                getRandomGrade(), getRandomGrade());
-        Student student3 = new Student(generateStudentId(), getRandomGrade(),
-                getRandomGrade(), getRandomGrade());
-        Student student4 = new Student(generateStudentId(), getRandomGrade(),
-                getRandomGrade(), getRandomGrade());
-        Student student5 = new Student(generateStudentId(), getRandomGrade(),
-                getRandomGrade(), getRandomGrade());
+        Student student1 = new Student();
+        Student student2 = new Student();
+        Student student3 = new Student();
+        Student student4 = new Student();
+        Student student5 = new Student();
         displayGrades(student1, student2, student3, student4, student5);
         recalculateGrades(student1, student2, student3, student4, student5);
         displayGrades(student1, student2, student3, student4, student5);
@@ -61,6 +53,19 @@ public class chalmersw06 {
         private int[] testGrades;
         // Still feels pretty redundant
         private double testAverage;
+
+        /**
+         * Creates a new Student with default randomized values for the ID and test grades.
+         *
+         * @see Student#Student(String, int...)
+         */
+        public Student() {
+            this.id = generateStudentId();
+            this.testGrades = new int[]{
+                    getRandomGrade(), getRandomGrade(), getRandomGrade()
+            };
+            this.testAverage = calculateTestAverage(testGrades);
+        }
 
         /**
          * Creates a new student with the given student ID and test grades.
