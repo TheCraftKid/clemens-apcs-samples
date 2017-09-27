@@ -9,13 +9,32 @@ package com.thecraftkid.apcs;
  */
 public class chalmersw06 {
 
+    /**
+     * Indicates that this should run
+     */
+    private static final boolean LAB_7_MODE = false;
+
     public static void main(String[] args) {
-        System.out.println("Mr. Burton\nLab 6 - 10 point version");
-        Student student1 = new Student();
-        Student student2 = new Student();
-        Student student3 = new Student();
-        Student student4 = new Student();
-        Student student5 = new Student();
+        Student student1;
+        Student student2;
+        Student student3;
+        Student student4;
+        Student student5;
+        if (LAB_7_MODE) {
+            System.out.println("Mr. Burton\nLab 7 - 10 point version");
+            student1 = new LabSevenStudent();
+            student2 = new LabSevenStudent();
+            student3 = new LabSevenStudent();
+            student4 = new LabSevenStudent();
+            student5 = new LabSevenStudent();
+        } else {
+            System.out.println("Mr. Burton\nLab 6 - 10 point version");
+            student1 = new Student();
+            student2 = new Student();
+            student3 = new Student();
+            student4 = new Student();
+            student5 = new Student();
+        }
         displayGrades(student1, student2, student3, student4, student5);
         recalculateGrades(student1, student2, student3, student4, student5);
         displayGrades(student1, student2, student3, student4, student5);
@@ -161,6 +180,37 @@ public class chalmersw06 {
         public void setTestAverage(double testAverage) {
             this.testAverage = testAverage;
         }
+    }
+
+    /**
+     * A {@link Student} that displays letter grades after the {@link Student#toString()}
+     * </p>
+     * This was made to differentiate between a {@link Student} for Lab 6 and this one for Lab 7
+     */
+    static class LabSevenStudent extends Student {
+
+        public Grade determineLetterGrade(double grade) {
+            if (grade > 90) {
+                return Grade.A;
+            } else if (grade <= 89 && grade >= 80) {
+                return Grade.B;
+            } else if (grade <= 79 && grade >= 75) {
+                return Grade.C;
+            } else if (grade <= 74 && grade <= 70) {
+                return Grade.D;
+            } else {
+                return Grade.F;
+            }
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + "\t" + determineLetterGrade(getTestAverage());
+        }
+    }
+
+    enum Grade {
+        A, B, C, D, F
     }
 
 }
