@@ -1,0 +1,110 @@
+package com.thecraftkid.apcs;
+
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+/**
+ * A program which displays a solid colored circle which bounces off of invisible walls.
+ *
+ * @author Willie Chalmers III
+ * @since 9/28/17
+ */
+public class chalmersw07ec extends Panel {
+
+    private Image offScreenImage;
+    private Dimension offScreenSize;
+    private Graphics offScreenGraphics;
+    final boolean RESIZEABLE = false;
+    int width = 1280 - 10;
+    int height = 1024 - 10;
+    Image virtualMem;
+    Graphics2D gBuffer;
+
+    private Ball ball;
+
+    public void resizeWindow() {
+        if (RESIZEABLE) {
+            if (getHeight() != height + 10 || getWidth() != width + 10) {
+                height = getHeight() - 10;
+                width = getWidth() - 10;
+                virtualMem = createImage(width + 20, height + 20);
+                gBuffer = (Graphics2D) virtualMem.getGraphics();
+                gBuffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            }
+        } else setSize(width + 10, height + 10);
+    }
+
+    public void update(Graphics g) {
+        Dimension d = size();
+        if ((offScreenImage == null) || (d.width != offScreenSize.width) || (d.height != offScreenSize.height)) {
+            offScreenImage = createImage(d.width, d.height);
+            offScreenSize = d;
+            offScreenGraphics = offScreenImage.getGraphics();
+        }
+        offScreenGraphics.clearRect(0, 0, d.width, d.height);
+        paint(offScreenGraphics);
+        g.drawImage(offScreenImage, 0, 0, null);
+    }
+
+    public static void main(String[] args) {
+        Frame f = new Frame();
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        chalmersw07ec window = new chalmersw07ec();
+        window.setSize(1050, 700);
+        f.add(window);
+        f.pack();
+        window.init();
+        f.setSize(1050, 700);/*size of frame*/
+        f.show();
+    }
+
+
+    public void init() {
+        ball = new Ball();
+    }
+
+    public void paint(Graphics g) {
+//        TODO: 1) Draw circle on screen, 2) Move circle, 3) bounce off wall, 4) repeat
+
+        try {
+            Thread.sleep(20);
+        } catch (Exception e) {
+        }
+        repaint();
+    }
+
+    public void bounce() {
+
+    }
+
+    public void move() {
+
+    }
+}
+
+class Ball {
+
+    private Point point;
+
+    public Ball() {
+        this(0, 0);
+    }
+
+    public Ball(int x, int y) {
+        point = new Point(x, y);
+    }
+
+    public void move() {
+        int x = (int) point.getX();
+        int y = (int) point.getY();
+    }
+
+    public void collide() {
+
+    }
+}

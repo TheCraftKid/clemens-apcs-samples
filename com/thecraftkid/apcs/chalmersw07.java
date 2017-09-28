@@ -8,32 +8,15 @@ package com.thecraftkid.apcs;
  * @since 9/18/17
  */
 public class chalmersw07 {
-    /**
-     * Indicates that this should run
-     */
-    private static final boolean LAB_7_MODE = false;
 
     public static void main(String[] args) {
-        Student student1;
-        Student student2;
-        Student student3;
-        Student student4;
-        Student student5;
-        if (LAB_7_MODE) {
-            System.out.println("Mr. Burton\nLab 7 - 10 point version");
-            student1 = new LabSevenStudent();
-            student2 = new LabSevenStudent();
-            student3 = new LabSevenStudent();
-            student4 = new LabSevenStudent();
-            student5 = new LabSevenStudent();
-        } else {
-            System.out.println("Mr. Burton\nLab 6 - 10 point version");
-            student1 = new Student();
-            student2 = new Student();
-            student3 = new Student();
-            student4 = new Student();
-            student5 = new Student();
-        }
+        System.out.println("Mr. Burton\nLab 7 - 10 point version");
+        Student student1 = new LabSevenStudent();
+        Student student2 = new LabSevenStudent();
+        Student student3 = new LabSevenStudent();
+        Student student4 = new LabSevenStudent();
+        Student student5 = new LabSevenStudent();
+
         displayGrades(student1, student2, student3, student4, student5);
         recalculateGrades(student1, student2, student3, student4, student5);
         displayGrades(student1, student2, student3, student4, student5);
@@ -195,7 +178,7 @@ public class chalmersw07 {
                 return Grade.B;
             } else if (grade <= 79 && grade >= 75) {
                 return Grade.C;
-            } else if (grade <= 74 && grade <= 70) {
+            } else if (grade <= 74 && grade >= 70) {
                 return Grade.D;
             } else {
                 return Grade.F;
