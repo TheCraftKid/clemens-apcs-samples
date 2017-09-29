@@ -77,7 +77,8 @@ public class chalmersw07ec extends Panel {
 
         try {
             Thread.sleep(20);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
+            // no-op
         }
         repaint();
     }
@@ -112,6 +113,10 @@ class Ball {
         if (y + getYSize() < chalmersw07ec.SCREEN_Y_SIZE) {
             y++;
         }
+    }
+
+    public void draw(Graphics g) {
+        g.drawOval((int) point.getX(), (int) point.getY(), 10, 10);
     }
 
     public int getXSize() {
