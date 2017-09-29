@@ -12,6 +12,10 @@ import java.awt.event.WindowEvent;
  */
 public class chalmersw07ec extends Panel {
 
+    // TODO: 9/29/2017 Find way to set this dynamically
+    public static final int SCREEN_X_SIZE = 1280;
+    public static final int SCREEN_Y_SIZE = 1024;
+
     private Image offScreenImage;
     private Dimension offScreenSize;
     private Graphics offScreenGraphics;
@@ -102,9 +106,20 @@ class Ball {
     public void move() {
         int x = (int) point.getX();
         int y = (int) point.getY();
+        if (x + getXSize() < chalmersw07ec.SCREEN_X_SIZE) {
+            x++;
+        }
+        if (y + getYSize() < chalmersw07ec.SCREEN_Y_SIZE) {
+            y++;
+        }
     }
 
-    public void collide() {
-
+    public int getXSize() {
+        return 5;
     }
+
+    public int getYSize() {
+        return 5;
+    }
+
 }
