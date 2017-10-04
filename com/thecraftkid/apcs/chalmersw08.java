@@ -16,8 +16,12 @@ public class chalmersw08 {
         DieGame.startNewGame(startingFunds);
     }
 
+    /**
+     * Returns the user-inputted
+     */
     private static int requestStartingFunds() {
         Scanner scanner = new Scanner(System.in);
+        System.out.print("How much money would you like to bring to Las Vegas?\t");
         return scanner.nextInt();
     }
 
@@ -58,7 +62,7 @@ public class chalmersw08 {
         }
 
         private void displayGameOver() {
-
+            System.out.println("Rolls: " + rolls + " Funds: " + funds);
         }
 
         public int getNextRoll() {
@@ -67,11 +71,13 @@ public class chalmersw08 {
 
 
         public void onRoll(int first, int second) {
+            System.out.println(first + " " + second);
             if (first + second == 7) {
                 addFunds(FUND_INCREMENT);
             } else {
                 subtractFunds(FUND_DECREMENT);
             }
+            rolls++;
         }
 
         public void addFunds(int amount) {
