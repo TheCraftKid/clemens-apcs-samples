@@ -45,20 +45,48 @@ public class chalmersw08 {
 
         private int rolls;
 
+        /**
+         * Used
+         */
+        private DieRollCallback defaultCallback = (first, second) -> {
+            System.out.println(first + " " + second);
+            if (first + second == 7) {
+                addFunds(FUND_INCREMENT);
+            } else {
+                subtractFunds(FUND_DECREMENT);
+            }
+            rolls++;
+        };
+
         private DieGame(int startingFunds) {
             die = new Die();
             funds = startingFunds;
             rolls = 0;
         }
 
-        public static void startNewGame(int startingFunds) {
+        /**
+         * Starts a new DieGame instance
+         */
+        public static DieGame startNewGame(int startingFunds) {
+            return startNewGame(startingFunds, null);
+        }
+
+        /**
+         * Starts a new DieGame instance with a {@link DieRollCallback}
+         */
+        public static DieGame startNewGame(int startingFunds, DieRollCallback callback) {
             DieGame game = new DieGame(startingFunds);
             while (game.funds >= 0) {
                 int firstRoll = game.getNextRoll();
                 int secondRoll = game.getNextRoll();
-                game.onRoll(firstRoll, secondRoll);
+                if (callback != null) {
+                    callback.onRoll(firstRoll, secondRoll);
+                } else {
+                    game.defaultCallback.onRoll(firstRoll, secondRoll);
+                }
             }
             game.displayGameOver();
+            return game;
         }
 
         private void displayGameOver() {
@@ -69,23 +97,20 @@ public class chalmersw08 {
             return die.roll();
         }
 
-
-        public void onRoll(int first, int second) {
-            System.out.println(first + " " + second);
-            if (first + second == 7) {
-                addFunds(FUND_INCREMENT);
-            } else {
-                subtractFunds(FUND_DECREMENT);
-            }
-            rolls++;
-        }
-
         public void addFunds(int amount) {
             funds += amount;
         }
 
         public void subtractFunds(int amount) {
             funds -= amount;
+        }
+
+        public interface DieRollCallback {
+
+            /**
+             * Called when the game rolls two dice.
+             */
+            void onRoll(int rollOne, int rollTwo);
         }
     }
 

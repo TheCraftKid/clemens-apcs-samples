@@ -3,12 +3,13 @@ package com.thecraftkid.apcs;
 import java.awt.*;
 
 /**
- * A utility class for making UI-based applications for AP Computer Science.
+ * A program that displays each roll of the dice and the current amount of money in an Applet
+ * for {@link chalmersw08}
  *
- * @version 2.0.0
- * @since 10/4/17
+ * @author Willie Chalmers III
+ * @since 10/6/17
  */
-public class chalmersw08ec extends Panel {
+public class chalmersw08ec extends Panel implements chalmersw08.DieGame.DieRollCallback {
 
     private static final boolean RESIZEABLE = false;
 
@@ -17,6 +18,9 @@ public class chalmersw08ec extends Panel {
     private Graphics offScreenGraphics;
     private int width = 1280 - 10;
     private int height = 1024 - 10;
+
+    private chalmersw08.DieGame dieGame;
+    private DieGameDrawer renderer;
 
     public static void main(String[] args) {
         Frame f = new Frame();
@@ -69,19 +73,21 @@ public class chalmersw08ec extends Panel {
      * Initializes game variables.
      */
     public void init() {
-
+        renderer = new DieGameDrawer(getGraphics());
+        dieGame = chalmersw08.DieGame.startNewGame(100, this);
     }
 
-    /**
-     * This is where most front-end game code should be called.
-     *
-     * @param g
-     */
-    public void paint(Graphics g) {
-        // Insert code here
-
-        repaint();
-    }
+//    /**
+//     * This is where most front-end game code should be called.
+//     *
+//     * @param g
+//     */
+//    @Override
+//    public void paint(Graphics g) {
+//        // Insert code here
+//
+//        repaint();
+//    }
 
     /**
      * Pauses the main thread for 20 milliseconds
@@ -91,6 +97,25 @@ public class chalmersw08ec extends Panel {
             Thread.sleep(20);
         } catch (Exception ignored) {
             // no-op
+        }
+    }
+
+    @Override
+    public void onRoll(int rollOne, int rollTwo) {
+        renderer.displayDieRoll(rollOne, rollTwo);
+        sleep();
+    }
+
+    private static class DieGameDrawer {
+
+        private Graphics graphics;
+
+        public DieGameDrawer(Graphics graphics) {
+            this.graphics = graphics;
+        }
+
+        public void displayDieRoll(int first, int second) {
+            graphics.drawString("You rolled " + first + " and " + second, 100, 100);
         }
     }
 }
