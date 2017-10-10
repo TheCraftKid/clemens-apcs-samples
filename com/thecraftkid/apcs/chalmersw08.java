@@ -45,6 +45,10 @@ public class chalmersw08 {
 
         private int rolls;
 
+        private int maxRoll;
+
+        private int maxFunds;
+
         private DieGame(int startingFunds) {
             die = new Die();
             funds = startingFunds;
@@ -63,12 +67,12 @@ public class chalmersw08 {
 
         private void displayGameOver() {
             System.out.println("Rolls: " + rolls + " Funds: " + funds);
+            System.out.println("You should have stopped at " + maxRoll + " and $" + maxFunds);
         }
 
         public int getNextRoll() {
             return die.roll();
         }
-
 
         public void onRoll(int first, int second) {
             System.out.println(first + " " + second);
@@ -78,6 +82,10 @@ public class chalmersw08 {
                 subtractFunds(FUND_DECREMENT);
             }
             rolls++;
+            if (funds > maxFunds) {
+                maxFunds = funds;
+                maxRoll = rolls;
+            }
         }
 
         public void addFunds(int amount) {
