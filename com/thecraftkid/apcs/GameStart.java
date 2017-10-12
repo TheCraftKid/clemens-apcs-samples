@@ -25,6 +25,7 @@ public class GameStart extends Panel {
                 System.exit(0);
             }
         });
+        // Make sure to update class name here
         GameStart window = new GameStart();
         window.setSize(1050, 700);
         f.add(window);
@@ -86,11 +87,15 @@ public class GameStart extends Panel {
     /**
      * Pauses the main thread for 20 milliseconds
      */
-    private void sleep() {
+    private void sleep(int millis) {
         try {
-            Thread.sleep(20);
+            Thread.sleep(millis);
         } catch (Exception ignored) {
             // no-op
         }
+    }
+
+    private void sleep() {
+        sleep(20);
     }
 }
