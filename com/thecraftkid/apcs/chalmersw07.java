@@ -1,5 +1,8 @@
 package com.thecraftkid.apcs;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A program that instantiates five {@link Student} objects with a random five digit student ID and
  * three random test grades.
@@ -46,7 +49,7 @@ public class chalmersw07 {
     }
 
     @SuppressWarnings("WeakerAccess")
-    static class Student {
+    static class Student implements Cloneable {
 
         // I mean, this could be an int, but that's not enough randomness
         private String id;
@@ -137,6 +140,32 @@ public class chalmersw07 {
             setTestAverage(calculateTestAverage(testGrades));
         }
 
+        public String getId() {
+            return id;
+        }
+
+        // Getters return integers, but you're trying to set an int value equal to another. nono
+
+        // USe a setter for that
+        public int[] getTestGrades() {
+            return testGrades;
+        }
+        public double getTestAverage() {
+            return testAverage;
+        }
+
+        public void setTestAverage(double testAverage) {
+            this.testAverage = testAverage;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public void setTestGrades(int[] testGrades) {
+            this.testGrades = testGrades;
+        }
+
         /**
          * Returns this student's test grades and its average in a human-readable format.
          */
@@ -147,20 +176,31 @@ public class chalmersw07 {
                     (int) getTestAverage());
         }
 
-        public String getId() {
-            return id;
+        @Override
+        public boolean equals(Object o) {
+            if (o == this) {
+                return false;
+            }
+            if (!(o instanceof Student)) {
+                return false;
+            }
+            Student student = (Student) o;
+            boolean sameGrades = true;
+//            for (int value : getTestGrades()) {
+//                for (int otherValue : student.getTestGrades()) {
+//                    if (value != otherValue) {
+//                        sameGrades = false;
+//                    }
+//                }
+//            }
+            sameGrades = Arrays.equals(student.getTestGrades(), getTestGrades());
+            return (getId().equals(student.getId())
+                    && sameGrades);
         }
 
-        public int[] getTestGrades() {
-            return testGrades;
-        }
-
-        public double getTestAverage() {
-            return testAverage;
-        }
-
-        public void setTestAverage(double testAverage) {
-            this.testAverage = testAverage;
+        @Override
+        public int hashCode() {
+            return Objects.hash(getId());
         }
     }
 

@@ -1,5 +1,7 @@
 package com.thecraftkid.apcs;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -14,7 +16,14 @@ public class chalmersw09 {
     public static void main(String[] args) {
         int startingPennies = getPennyCount();
         CoinCounter counter = new CoinCounter(startingPennies);
-        counter.calculateChange();
+        Map<CoinCounter.Coin, Integer> coins = counter.calculateChange();
+        printChange(coins);
+    }
+
+    public static void printChange(Map<CoinCounter.Coin, Integer> countAmounts) {
+        for (Map.Entry<CoinCounter.Coin, Integer> entry : countAmounts.entrySet()) {
+            System.out.println(entry.getKey() + "s: " + entry.getValue());
+        }
     }
 
     public static int getPennyCount() {
@@ -30,37 +39,41 @@ public class chalmersw09 {
             funds = startingPennies;
         }
 
-        public void calculateChange() {
+        public Map<Coin, Integer> calculateChange() {
+            Map<Coin, Integer> coins = new HashMap<>();
+            int pennies = funds;
+            while (pennies > 0) {
+                // TODO: 10/13/2017 Finish me
+            }
             // FIXME: 10/10/2017 Subtract from running total
-            int dollars = calculateDollars(funds);
-            int quarters = calculateQuarters(funds);
-            int dimes = calculateDimes(funds);
-            int nickels = calculateNickels(funds);
-            int pennies = 0;
+            int dollars = getExtraPenniesFromDollar(funds);
+            int quarters = getExtraPenniesFromQuarter(funds);
+            int dimes = getExtraPenniesFromDime(funds);
+            int nickels = getExtraPenniesFromNickel(funds);
             System.out.println("Dollars:\t" + dollars);
             System.out.println("Quarters:\t" + quarters);
             System.out.println("Dimes:\t" + dimes);
             System.out.println("Nickels:\t" + nickels);
             System.out.println("Pennies:\t" + pennies);
+            return coins;
         }
 
-        public int calculateDollars(int pennies) {
+        public int getExtraPenniesFromDollar(int pennies) {
             return pennies % 100;
         }
 
-        public int calculateNickels(int pennies) {
+        public int getExtraPenniesFromNickel(int pennies) {
             return pennies % Coin.NICKEL.getValue();
         }
 
-        public int calculateDimes(int pennies) {
+        public int getExtraPenniesFromDime(int pennies) {
             return pennies % Coin.DIME.getValue();
         }
 
-        public int calculateQuarters(int pennies) {
+        public int getExtraPenniesFromQuarter(int pennies) {
             return pennies % Coin.QUARTER.getValue();
         }
 
-        // TODO: 10/10/2017 Find better use for this
         public enum Coin {
             PENNY(1), NICKEL(5), DIME(10), QUARTER(25);
 
