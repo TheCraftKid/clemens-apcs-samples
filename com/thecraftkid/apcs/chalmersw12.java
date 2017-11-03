@@ -23,7 +23,11 @@ public class chalmersw12 {
     public static int[] sortInsertion(int[] list) {
         int[] sorted = new int[list.length];
         for (int i = 0; i < list.length; i++) {
+            int toSort = sorted[i];
+            for (int j = 0; j < list.length; j++) {
+                int next = sorted[i];
 
+            }
         }
         return sorted;
     }
@@ -38,6 +42,16 @@ public class chalmersw12 {
                 sorted[i - 1] = first;
             }
         }
+        return sorted;
+    }
+
+    /**
+     * Sorts the given list in reverse order
+     *
+     * @return
+     */
+    public static int[] sortBackwards(int[] list) {
+        int[] sorted = clone(list);
         return sorted;
     }
 
