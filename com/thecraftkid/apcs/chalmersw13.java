@@ -3,10 +3,11 @@ package com.thecraftkid.apcs;
 import com.thecraftkid.apcs.given.LabHelper;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 /**
- * A program the implements binary and sequential sort
+ * A program the implements binary and sequential sort.
  *
  * @author Willie Chalmers III
  * @since 11/8/17
@@ -43,6 +44,12 @@ public class chalmersw13 {
     }
 
     public static class Searcher {
+
+        private SearchCallback callback;
+
+        public Searcher(SearchCallback callback) {
+            callback
+        }
 
         /**
          * Performs a binary search on the given list.
@@ -92,6 +99,14 @@ public class chalmersw13 {
 
         private static int[] sort(int[] list) {
             return new chalmersw12.Sorter(list).sortInsertion();
+        }
+
+        public interface SearchCallback {
+            default void onSearchUpdate(List<Integer> list, int iteration, boolean found) {
+                onSearchUpdate(list.toArray(new Integer[list.size()]), iteration, found);
+            }
+
+            void onSearchUpdate(Integer[] list, int iteration, boolean found);
         }
     }
 }
