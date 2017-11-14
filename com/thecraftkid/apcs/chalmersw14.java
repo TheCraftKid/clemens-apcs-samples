@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
+import static java.lang.System.out;
+
 /**
  * @author Willie Chalmers III
  * @since 11/9/17
@@ -11,26 +13,157 @@ import java.util.stream.Collectors;
 public class chalmersw14 {
 
     public static void main(String[] args) {
-
+        CardFlowManager.getInstance(new Deck()).start();
     }
 
+    /**
+     * A class that simulates two players playing a card game.
+     */
     public static class CardPlayer {
 
         private Deck playerOneDeck = new Deck();
         private Deck playerTwoDeck = new Deck();
 
-        public static void startWarGame() {
+        private CardPlayer() {
+        }
 
+        /**
+         * <a href="http://en.wikipedia.org/wiki/War_(card_game)">War</a>
+         */
+        public static void startWarGame() {
+            CardPlayer player = new CardPlayer();
+            player.playWar();
+        }
+
+        private void playWar() {
+            while (playerOneDeck.size() > 0 && playerTwoDeck.size() > 0) {
+
+            }
         }
     }
 
-    public static class Deck {
+    /**
+     * A program component that allows the user to fill a deck of cards, delete
+     * all cards from the deck, display all cards in the deck, pull card and
+     * remove it from the deck, shuffle the deck, sort the deck by value, and
+     * play a game of war using the cards in the deck.
+     *
+     * @see CardPlayer
+     * @see ChalmersCard
+     */
+    public static class CardFlowManager {
 
-        private List<ChalmersCard> cards = new ArrayList<>();
+        private static CardFlowManager INSTANCE;
 
-        public void fillDeck() {
+        private static final int EXIT = 0;
+        private static final int FILL_DECK = 1;
+        private static final int DELETE_CARDS = 2;
+        private static final int DISPLAY_CARDS = 3;
+        private static final int PULL_CARD = 4;
+        private static final int SHUFFLE_DECK = 5;
+        private static final int SORT_DECK = 6;
+        private static final int PLAY_WAR = 10;
+
+        private final Deck deck;
+
+        public CardFlowManager(Deck deck) {
+            this.deck = deck;
+        }
+
+        /**
+         * Returns the current instance of the CardFlowManager if it exists;
+         * otherwise, it returns a new one with the {@link Deck} provided.
+         */
+        public static CardFlowManager getInstance(Deck deck) {
+            if (INSTANCE == null) {
+                INSTANCE = new CardFlowManager(deck);
+            }
+            return INSTANCE;
+        }
+
+        /**
+         * Begins a loop that doesn't end until the user chooses the exit option.
+         */
+        public void start() {
+            int input;
+            while ((input = getInput("Choose an option: ")) != EXIT) {
+                switch (input) {
+                    case FILL_DECK:
+                        launchFillDeckFlow();
+                        break;
+                    case DELETE_CARDS:
+                        launchDeleteCardsFlow();
+                        break;
+                    case DISPLAY_CARDS:
+                        launchDisplayCardsFlow();
+                        break;
+                    case PULL_CARD:
+                        launchPullCardFlow();
+                        break;
+                    case SHUFFLE_DECK:
+                        launchShuffleDeckFlow();
+                        break;
+                    case SORT_DECK:
+                        launchSortDeckFlow();
+                        break;
+                    case PLAY_WAR:
+                        launchPlayWarFlow();
+                        break;
+                }
+            }
+        }
+
+        public int getInput(String prompt) {
+            out.println(prompt);
+            return new Scanner(System.in).nextInt();
+        }
+
+        public void launchFillDeckFlow() {
+            out.println("Filling deck with valid card combinations...");
+            deck.fill();
+            out.println("Done.");
+        }
+
+        public void launchDeleteCardsFlow() {
+            out.println("Deleting all cards in deck...");
+            for (int i = 0; i < deck.size(); i++) {
+                deck.remove(i);
+            }
+        }
+
+        public void launchDisplayCardsFlow() {
+            out.println("These are all the cards in the deck: ");
+            out.println(deck);
+        }
+
+        public void launchPullCardFlow() {
+            ChalmersCard card = deck.pullCard();
+            out.printf("Your card is %s", card);
+            out.println();
+        }
+
+        public void launchShuffleDeckFlow() {
+            out.println("Shuffling cards...");
+            deck.shuffle();
+            out.println("Deck is now shuffled.");
+        }
+
+        public void launchSortDeckFlow() {
+            out.println("Sorting deck:");
+            deck.getSortedDeck().forEach(out::println);
+            out.println("Deck is now sorted.");
+        }
+
+        public void launchPlayWarFlow() {
+            CardPlayer.startWarGame();
+        }
+    }
+
+    public static class Deck extends ArrayList<ChalmersCard> {
+
+        public void fill() {
 //            cards.replaceAll(chalmersCard -> new ChalmersCard());
-            while (cards.size() <= 52) {
+            while (size() <= 52) {
 
                 for (int value : ChalmersCard.POSSIBLE_VALUES) {
 
@@ -39,27 +172,25 @@ public class chalmersw14 {
         }
 
         /**
-         * Removes all cards from this deck.
-         */
-        public void clearDeck() {
-            cards.removeIf(card -> true);
-        }
-
-        /**
          * Prints {@link ChalmersCard#toString()} to standard output for each
          * card in this deck.
          */
         public void displayCards() {
-            System.out.println(this);
+            out.println(this);
         }
 
         /**
          * Places each of the cards in this deck into a new random position.
          */
-        public void shuffleDeck() {
-            List<ChalmersCard> copy = new ArrayList<>();
-            Collections.copy(copy, cards);
-            List<Integer> randoms = generateRandomPositions();
+        public void shuffle() {
+            Collections.shuffle(this); // Can't I just do this?
+//            List<ChalmersCard> copy = new ArrayList<>();
+//            Collections.copy(copy, this);
+//            List<Integer> randoms = generateRandomPositions();
+//            randoms.forEach(random -> {
+//
+//            });
+
         }
 
         private List<Integer> generateRandomPositions() {
@@ -73,13 +204,22 @@ public class chalmersw14 {
             return randoms;
         }
 
+        public ChalmersCard pullCard() {
+            return null;
+        }
+
         /**
          * Returns a sorted copy of this deck.
          */
         public List<ChalmersCard> getSortedDeck() {
-            return cards.stream()
+            return stream()
                     .sorted(Comparator.naturalOrder())
                     .collect(Collectors.toList());
+        }
+
+        @Override
+        public int size() {
+            return 0;
         }
 
         /**
@@ -87,7 +227,7 @@ public class chalmersw14 {
          */
         @Override
         public String toString() {
-            return String.valueOf(cards);
+            return super.toString();
         }
     }
 
