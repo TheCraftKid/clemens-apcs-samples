@@ -48,7 +48,7 @@ public class chalmersw13 {
         private SearchCallback callback;
 
         public Searcher(SearchCallback callback) {
-            callback
+            this.callback = callback;
         }
 
         /**
