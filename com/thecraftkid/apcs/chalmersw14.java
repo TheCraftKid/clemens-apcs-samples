@@ -40,6 +40,10 @@ public class chalmersw14 {
 
             }
         }
+
+        private void playCard(String player, ChalmersCard card) {
+            System.out.printf("%s has played %s", player, card);
+        }
     }
 
     /**
@@ -121,6 +125,7 @@ public class chalmersw14 {
         public void launchFillDeckFlow() {
             out.println("Filling deck with valid card combinations...");
             deck.fill();
+            System.out.println(deck);
             out.println("Done.");
         }
 
@@ -161,22 +166,19 @@ public class chalmersw14 {
 
     public static class Deck extends ArrayList<ChalmersCard> {
 
+        /**
+         * Fills this deck with all valid card combinations.
+         */
         public void fill() {
 //            cards.replaceAll(chalmersCard -> new ChalmersCard());
-            while (size() <= 52) {
-
-                for (int value : ChalmersCard.POSSIBLE_VALUES) {
-
-                }
-            }
+//            for (int value : ChalmersCard.POSSIBLE_VALUES) {
+//
+//            }
+            return;
         }
 
-        /**
-         * Prints {@link ChalmersCard#toString()} to standard output for each
-         * card in this deck.
-         */
-        public void displayCards() {
-            out.println(this);
+        public void fill(int amount) {
+
         }
 
         /**
@@ -190,7 +192,6 @@ public class chalmersw14 {
 //            randoms.forEach(random -> {
 //
 //            });
-
         }
 
         private List<Integer> generateRandomPositions() {
@@ -205,7 +206,8 @@ public class chalmersw14 {
         }
 
         public ChalmersCard pullCard() {
-            return null;
+            int cardIndex = ThreadLocalRandom.current().nextInt(0, size() - 1);
+            return get(cardIndex);
         }
 
         /**
@@ -213,7 +215,7 @@ public class chalmersw14 {
          */
         public List<ChalmersCard> getSortedDeck() {
             return stream()
-                    .sorted(Comparator.naturalOrder())
+                    .sorted(Comparator.naturalOrder()) // Use the ChalmersCard#compareTo(ChalmersCard)
                     .collect(Collectors.toList());
         }
 
