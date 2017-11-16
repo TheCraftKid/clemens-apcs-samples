@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 import static java.lang.System.out;
 
 /**
+ * A program that allows the user to simulate having and playing a deck of
+ * cards.
+ *
  * @author Willie Chalmers III
  * @since 11/9/17
  */
@@ -21,14 +24,22 @@ public class chalmersw14 {
      */
     public static class CardPlayer {
 
+        private CardPlayListener listener;
+
         private Deck playerOneDeck = new Deck();
         private Deck playerTwoDeck = new Deck();
 
         private CardPlayer() {
+            this(null);
+        }
+
+        private CardPlayer(CardPlayListener listener) {
+            this.listener = listener;
         }
 
         /**
-         * <a href="http://en.wikipedia.org/wiki/War_(card_game)">War</a>
+         * Begins playing the <a href="http://en.wikipedia.org/wiki/War_(card_game)">War</a>
+         * card game.
          */
         public static void startWarGame() {
             CardPlayer player = new CardPlayer();
@@ -37,12 +48,24 @@ public class chalmersw14 {
 
         private void playWar() {
             while (playerOneDeck.size() > 0 && playerTwoDeck.size() > 0) {
+                ChalmersCard playerOneCard = playerOneDeck.pullCard();
+                ChalmersCard playerTwoCard = playerTwoDeck.pullCard();
+                if (playerOneCard.compareTo(playerTwoCard) > 0) {
+
+                }
 
             }
         }
 
         private void playCard(String player, ChalmersCard card) {
+            if (listener != null) {
+                listener.onPlay(player, card);
+            }
             System.out.printf("%s has played %s", player, card);
+        }
+
+        public interface CardPlayListener {
+            void onPlay(String player, ChalmersCard card);
         }
     }
 
@@ -170,15 +193,7 @@ public class chalmersw14 {
          * Fills this deck with all valid card combinations.
          */
         public void fill() {
-//            cards.replaceAll(chalmersCard -> new ChalmersCard());
-//            for (int value : ChalmersCard.POSSIBLE_VALUES) {
-//
-//            }
-            return;
-        }
-
-        public void fill(int amount) {
-
+            // TODO: 11/16/2017 Finish me
         }
 
         /**
@@ -207,7 +222,7 @@ public class chalmersw14 {
 
         public ChalmersCard pullCard() {
             int cardIndex = ThreadLocalRandom.current().nextInt(0, size() - 1);
-            return get(cardIndex);
+            return remove(cardIndex);
         }
 
         /**
@@ -233,6 +248,9 @@ public class chalmersw14 {
         }
     }
 
+    /**
+     * A simple playing card, like a ace of spaces, or a 10 of diamonds.
+     */
     public static class ChalmersCard implements Comparable<ChalmersCard> {
 
         /**
@@ -240,6 +258,7 @@ public class chalmersw14 {
          */
         private static final List<Integer> POSSIBLE_VALUES = Collections.unmodifiableList(
                 Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+
         /**
          * Consist of A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K
          */
