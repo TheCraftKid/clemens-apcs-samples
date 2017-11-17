@@ -31,7 +31,7 @@ public class GameStart extends Panel {
         f.add(window);
         f.pack();
         window.init();
-        f.setSize(1050, 700); // Size of frame
+        f.setSize(1050, 700);
         f.setVisible(true);
     }
 
@@ -54,7 +54,9 @@ public class GameStart extends Panel {
      *
      * @param g
      */
+    @Override
     public void update(Graphics g) {
+        super.update(g);
         Dimension d = getSize();
         if ((offScreenImage == null) || (d.width != offScreenSize.width) || (d.height != offScreenSize.height)) {
             offScreenImage = createImage(d.width, d.height);
@@ -67,21 +69,23 @@ public class GameStart extends Panel {
     }
 
     /**
-     * Initializes game variables.
-     */
-    public void init() {
-
-    }
-
-    /**
      * This is where most front-end game code should be called.
      *
      * @param g
      */
+    @Override
     public void paint(Graphics g) {
+        super.paint(g);
         // Insert code here
 
         repaint();
+    }
+
+    /**
+     * Initializes game variables.
+     */
+    public void init() {
+
     }
 
     /**
