@@ -26,7 +26,9 @@ public class chalmersw14 {
 
         private CardPlayListener listener;
 
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         private Deck playerOneDeck = new Deck();
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         private Deck playerTwoDeck = new Deck();
 
         private CardPlayer() {
@@ -213,7 +215,7 @@ public class chalmersw14 {
             List<Integer> randoms = new ArrayList<>();
             while (randoms.size() <= 52) {
                 int nextRandom = ThreadLocalRandom.current().nextInt(0, 52 + 1);
-                if (randoms.get(nextRandom) == -1) {
+                if (randoms.indexOf(nextRandom) == -1) { // If it's not in the list, add it.
                     randoms.add(nextRandom);
                 }
             }
