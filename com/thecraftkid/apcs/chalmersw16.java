@@ -16,8 +16,10 @@ public class chalmersw16 {
 
     public static void main(String[] args) {
         RiddlePresenter presenter = new RiddlePresenter();
+        presenter.start();
 
         StringManipulator manipulator = new StringManipulator(TO_MANIPULATE);
+        out.println();
         out.printf("Original string: %s", manipulator);
 
     }
@@ -81,64 +83,57 @@ public class chalmersw16 {
 
     public static class RiddlePresenter {
 
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         private RiddleGenerator mRiddleGenerator = new RiddleGenerator();
 
         private int mCorrect;
 
         private int mTotal;
 
-        public void presentNext() {
-
+        public void start() {
+            mRiddleGenerator.forEach(riddle -> {
+                System.out.println(riddle);
+                String response = getInput();
+                if (riddle.getValue().equals(response)) {
+                    mCorrect++;
+                    System.out.println("Yep.");
+                } else {
+                    System.out.println("Nope. It's " + riddle.getValue());
+                }
+                mTotal++;
+            });
+            displayResults();
         }
 
         public void displayResults() {
+            System.out.printf("You got %s out of %s riddles correct.", mCorrect, mTotal);
+            if (mTotal == mCorrect) {
+                out.println("You are a freaking legend.");
+            }
+        }
 
+        private String getInput() {
+            return new Scanner(System.in).next();
         }
     }
 
-    public static class RiddleGenerator extends ArrayList<String> {
-
-        private List<Riddle> mRiddles = Collections.unmodifiableList(generateRiddles());
+    public static class RiddleGenerator extends ArrayList<Riddle> {
 
         public RiddleGenerator() {
             super();
+            addAll(fetchRiddles());
         }
 
-        private static List<Riddle> generateRiddles() {
+        private static List<Riddle> fetchRiddles() {
             List<Riddle> riddles = new ArrayList<>();
             // TODO: 11/27/2017 Populate with riddles
-            riddles.add(new Riddle("", ""));
-            riddles.add(new Riddle("", ""));
+            riddles.add(new Riddle("What is black and white and red all over?",
+                    "A barber's rag."));
+            riddles.add(new Riddle("What is red and yellow and blue all over?",
+                    "A rainbow."));
             riddles.add(new Riddle("", ""));
             riddles.add(new Riddle("", ""));
             return riddles;
-        }
-
-        @Override
-        public Iterator<String> iterator() {
-
-            return super.iterator();
-        }
-
-        private class RiddleIterator implements Iterator<String> {
-
-            private int mCursor;
-
-            private int mLast;
-
-            @Override
-            public boolean hasNext() {
-                return mCursor < size();
-            }
-
-            @Override
-            public String next() {
-                return null;
-            }
-
-            @Override
-            public void remove() {
-            }
         }
     }
 
@@ -166,6 +161,11 @@ public class chalmersw16 {
         @Override
         public String setValue(String s) {
             throw new UnsupportedOperationException("Riddles are immutable.");
+        }
+
+        @Override
+        public String toString() {
+            return getKey();
         }
     }
 }
