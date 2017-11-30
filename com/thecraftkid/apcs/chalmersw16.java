@@ -20,12 +20,27 @@ public class chalmersw16 {
 
         StringManipulator manipulator = new StringManipulator(TO_MANIPULATE);
         out.println();
-        out.printf("Original string: %s", manipulator);
-
+        out.printf("Original string: %s", splitToConsole(TO_MANIPULATE));
+        out.println();
+        int startPos = Integer.parseInt(getInput("Where would to like to split this string from?"));
+        int endPos = Integer.parseInt(getInput("Where would to like to split this string to?"));
+        out.println();
+        out.printf("From given start: %s", manipulator.getPart(startPos));
+        out.println();
+        out.printf("To given end: %s", manipulator.displayPartTo(endPos));
     }
 
-    public static String getInput() {
+    public static String getInput(String prompt) {
+        out.println(prompt);
         return new Scanner(System.in).next();
+    }
+
+    public static String splitToConsole(String toSplit) {
+        List<String> split = new ArrayList<>();
+        // TODO: 11/30/2017 Split string into 80 character sections
+        StringBuilder builder = new StringBuilder();
+        split.forEach(builder::append);
+        return builder.toString();
     }
 
     public static int getNumberInput() {
@@ -128,9 +143,9 @@ public class chalmersw16 {
             List<Riddle> riddles = new ArrayList<>();
             // TODO: 11/27/2017 Populate with riddles
             riddles.add(new Riddle("What is black and white and red all over?",
-                    "A barber's rag."));
+                    "a barber's rag."));
             riddles.add(new Riddle("What is red and yellow and blue all over?",
-                    "A rainbow."));
+                    "a rainbow."));
             riddles.add(new Riddle("", ""));
             riddles.add(new Riddle("", ""));
             return riddles;
