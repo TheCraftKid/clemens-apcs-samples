@@ -27,9 +27,9 @@ public class chalmersw16 {
         int startPos = getNumberInput("Where would to like to split this string from?");
         int endPos = getNumberInput("Where would to like to split this string to?");
         out.println();
-        out.printf("From given start: %s", manipulator.getPart(startPos));
-        out.println();
         out.printf("To given end: %s", manipulator.displayPartTo(endPos));
+        out.println();
+        out.printf("Within given bounds: %s", manipulator.getPart(startPos, endPos));
     }
 
     public static String getInput(String prompt) {
@@ -78,22 +78,44 @@ public class chalmersw16 {
         return builder.toString();
     }
 
+    /**
+     *
+     */
     public static class StringManipulator {
 
-        private String mString;
+        private final String mString;
 
+        /**
+         * Creates a new StringManipulator containing the given string.
+         */
         public StringManipulator(String toManipulate) {
             mString = toManipulate;
         }
 
+        /**
+         * Returns a substring from the given position to this string's length.
+         *
+         * @param start The starting index to split
+         */
         public String getPart(int start) {
             return getPart(start, mString.length());
         }
 
+        /**
+         * Returns a substring from this string's length to the given end.
+         *
+         * @param end The index to stop splitting
+         */
         public String displayPartTo(int end) {
             return getPart(0, end);
         }
 
+        /**
+         * Returns substring from the given start to the given end.
+         *
+         * @param start The index to start splitting
+         * @param end   The index to stop splitting
+         */
         public String getPart(int start, int end) {
             return mString.substring(start, end);
         }
@@ -121,12 +143,18 @@ public class chalmersw16 {
             return indexes;
         }
 
+        /**
+         * Returns the string passed in by the constructor.
+         */
         @Override
         public String toString() {
             return mString;
         }
     }
 
+    /**
+     * Displays riddles to standard output.
+     */
     public static class RiddlePresenter {
 
         @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
@@ -137,7 +165,8 @@ public class chalmersw16 {
         private int mTotal;
 
         /**
-         * Begins looping through riddles, asking them until there are no more left.
+         * Begins looping through riddles, asking them and waiting for a response
+         * until there are none left.
          */
         public void start() {
             mRiddleGenerator.forEach(riddle -> {
