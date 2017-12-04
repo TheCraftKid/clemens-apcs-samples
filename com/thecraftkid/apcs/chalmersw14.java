@@ -7,8 +7,7 @@ import java.util.stream.Collectors;
 import static java.lang.System.out;
 
 /**
- * A program that allows the user to simulate having and playing a deck of
- * cards.
+ * A program that allows the user to simulate having and playing a deck of cards.
  *
  * @author Willie Chalmers III
  * @since 11/9/17
@@ -40,8 +39,8 @@ public class chalmersw14 {
         }
 
         /**
-         * Begins playing the <a href="http://en.wikipedia.org/wiki/War_(card_game)">War</a>
-         * card game.
+         * Begins playing the <a href="http://en.wikipedia.org/wiki/War_(card_game)">War</a> card
+         * game.
          */
         public static void startWarGame() {
             CardPlayer player = new CardPlayer();
@@ -72,10 +71,25 @@ public class chalmersw14 {
     }
 
     /**
-     * A program component that allows the user to fill a deck of cards, delete
-     * all cards from the deck, display all cards in the deck, pull card and
-     * remove it from the deck, shuffle the deck, sort the deck by value, and
-     * play a game of war using the cards in the deck.
+     * A program component that allows the user to manipulate a given deck.
+     *
+     * <p>Options include:</p>
+     *
+     * <ul> <li> Fill a deck of cards </li>
+     *
+     * <li> Delete all cards from the deck </li>
+     *
+     * <li> Display all cards in the deck </li>
+     *
+     * <li> Pull card and remove it from the deck </li>
+     *
+     * <li> Shuffle the deck </li>
+     *
+     * <li> Sort the deck by value </li>
+     *
+     * <li> Play a game of war using the cards in the deck. </li>
+     *
+     * </ul>
      *
      * @see CardPlayer
      * @see ChalmersCard
@@ -100,8 +114,8 @@ public class chalmersw14 {
         }
 
         /**
-         * Returns the current instance of the CardFlowManager if it exists;
-         * otherwise, it returns a new one with the {@link Deck} provided.
+         * Returns the current instance of the CardFlowManager if it exists; otherwise, it returns a
+         * new one with the {@link Deck} provided.
          */
         public static CardFlowManager getInstance(Deck deck) {
             if (INSTANCE == null) {
@@ -116,6 +130,7 @@ public class chalmersw14 {
         public void start() {
             int input;
             while ((input = getInput("Choose an option: ")) != EXIT) {
+                displayOptions();
                 switch (input) {
                     case FILL_DECK:
                         launchFillDeckFlow();
@@ -142,9 +157,20 @@ public class chalmersw14 {
             }
         }
 
+        /**
+         * @param prompt The text to display to the user.
+         * @return The selected option
+         */
         public int getInput(String prompt) {
             out.println(prompt);
-            return new Scanner(System.in).nextInt();
+            int input;
+            try {
+                input = new Scanner(System.in).nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Please choose a valid selection.");
+                return getInput(prompt);
+            }
+            return input;
         }
 
         public void launchFillDeckFlow() {
@@ -184,8 +210,24 @@ public class chalmersw14 {
             out.println("Deck is now sorted.");
         }
 
+        /**
+         * Starts a game of war.
+         *
+         * @see CardPlayer#playWar()
+         */
         public void launchPlayWarFlow() {
             CardPlayer.startWarGame();
+        }
+
+        private void displayOptions() {
+            System.out.println(
+                    "1) Fill a deck of cards\n" +
+                            "2) Delete all cards in deck\n" +
+                            "3) Display all cards in deck\n" +
+                            "4) Pull a random card in the deck\n" +
+                            "5) Shuffle the deck\n" +
+                            "6) Sort the deck by card value\n" +
+                            "10) Watch a game of War between two decks");
         }
     }
 
@@ -211,6 +253,12 @@ public class chalmersw14 {
 //            });
         }
 
+        /**
+         * Generates a list of
+         *
+         * @deprecated {@link #shuffle()} is a better implementation of a list shuffler.
+         */
+        @Deprecated
         private List<Integer> generateRandomPositions() {
             List<Integer> randoms = new ArrayList<>();
             while (randoms.size() <= 52) {
@@ -302,9 +350,8 @@ public class chalmersw14 {
         /**
          * Compares the face and suit of the given card to this one for sorting.
          *
-         * @return -1 if the given card should be sorted before this card, 0 if
-         * the given card is equal to this card, or 1 if the given card should
-         * be sorted after this card.
+         * @return -1 if the given card should be sorted before this card, 0 if the given card is
+         *         equal to this card, or 1 if the given card should be sorted after this card.
          */
         @Override
         public int compareTo(ChalmersCard card) {
