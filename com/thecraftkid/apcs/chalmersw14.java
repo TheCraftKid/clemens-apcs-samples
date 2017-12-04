@@ -129,6 +129,7 @@ public class chalmersw14 {
          */
         public void start() {
             int input;
+            displayOptions();
             while ((input = getInput("Choose an option: ")) != EXIT) {
                 displayOptions();
                 switch (input) {
@@ -182,8 +183,8 @@ public class chalmersw14 {
 
         public void launchDeleteCardsFlow() {
             out.println("Deleting all cards in deck...");
-            for (int i = 0; i < deck.size(); i++) {
-                deck.remove(i);
+            while (deck.size() > 0) {
+                deck.remove(0);
             }
         }
 
@@ -216,6 +217,7 @@ public class chalmersw14 {
          * @see CardPlayer#playWar()
          */
         public void launchPlayWarFlow() {
+            out.println("Starting game of war...");
             CardPlayer.startWarGame();
         }
 
@@ -237,7 +239,11 @@ public class chalmersw14 {
          * Fills this deck with all valid card combinations.
          */
         public void fill() {
-            // TODO: 11/16/2017 Finish me
+            ChalmersCard.POSSIBLE_SUITS.forEach(suit -> {
+                for (String face : ChalmersCard.POSSIBLE_FACES) {
+                    add(new ChalmersCard(face, suit));
+                }
+            });
         }
 
         /**
@@ -284,11 +290,6 @@ public class chalmersw14 {
                     .collect(Collectors.toList());
         }
 
-        @Override
-        public int size() {
-            return 0;
-        }
-
         /**
          * Returns {@link ChalmersCard#toString()} for each in this deck.
          */
@@ -307,7 +308,7 @@ public class chalmersw14 {
          * Jack, queen, and king are worth 10.
          */
         private static final List<Integer> POSSIBLE_VALUES = Collections.unmodifiableList(
-                Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+                Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)); // TODO: Find more efficient way
 
         /**
          * Consist of A, 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K
@@ -321,23 +322,46 @@ public class chalmersw14 {
         private static final List<String> POSSIBLE_SUITS = Collections.unmodifiableList(
                 Arrays.asList("\3", "\4", "\5", "\6"));
 
-        private final int value;
+        private int value;
         private final String face;
         private final String suit;
 
-        public ChalmersCard(int value, String face, String suit) {
-            if (POSSIBLE_VALUES.stream().noneMatch(integer -> (value != integer))) {
-                throw new IllegalArgumentException("Value " + value + " is not valid");
-            }
+        public ChalmersCard(String face, String suit) {
             if (POSSIBLE_FACES.stream().noneMatch(string -> string.equals(face))) {
-                throw new IllegalArgumentException("Value " + value + " is not valid");
+                throw new IllegalArgumentException("Face " + face + " is not valid");
             }
             if (POSSIBLE_SUITS.stream().noneMatch(string -> string.equals(suit))) {
-                throw new IllegalArgumentException("Value " + value + " is not valid");
+                throw new IllegalArgumentException("Suit " + suit + " is not valid");
             }
-            this.value = value;
             this.face = face;
             this.suit = suit;
+            this.value = calculateValue(face);
+        }
+
+        private static int calculateValue(String face) {
+            int newValue;
+            try {
+                newValue = Integer.parseInt(face);
+            } catch (Exception e) {
+                // If it's NaN, it could be an ace, king, queen, or jack.
+                switch (face) {
+                    case "A":
+                        newValue = 1;
+                        break;
+                    case "K":
+                        newValue = 12;
+                        break;
+                    case "Q":
+                        newValue = 11;
+                        break;
+                    case "J":
+                        newValue = 10;
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Given suit isn't valid.");
+                }
+            }
+            return newValue;
         }
 
         /**
@@ -377,7 +401,7 @@ public class chalmersw14 {
 
         @Override
         public String toString() {
-            return getName() + "value: " + this.value;
+            return getName();
         }
     }
 }
