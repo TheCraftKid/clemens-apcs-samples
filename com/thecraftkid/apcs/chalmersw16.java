@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import static java.lang.System.out;
 
 /**
+ * A program that presents riddles and asks for responses from the user and
+ * then displays a manipulated String to the user.
+ *
  * @author Willie Chalmers III
  * @since 11/27/17
  */
@@ -15,9 +18,15 @@ public class chalmersw16 {
             "The secret of getting started is breaking your complex overwhelming tasks into small manageable tasks, " +
             "and then starting on the first one.”";
 
+    /**
+     * Asks for riddles and then asks for positions to split a string.
+     *
+     * @param args Ignored command line arguments
+     */
     public static void main(String[] args) {
         RiddlePresenter presenter = new RiddlePresenter();
         presenter.start();
+        out.println();
 
         StringManipulator manipulator = new StringManipulator(TO_MANIPULATE);
         out.println();
@@ -32,6 +41,13 @@ public class chalmersw16 {
         out.printf("Within given bounds: %s", manipulator.getPart(startPos, endPos));
     }
 
+    /**
+     * Prints the given prompt to the user and requests any string input from
+     * the console (standard input).
+     *
+     * @param prompt The prompt to display to the user.
+     * @return The number inputted from standard input.
+     */
     public static String getInput(String prompt) {
         out.println(prompt);
         return new Scanner(System.in).next();
@@ -79,7 +95,7 @@ public class chalmersw16 {
     }
 
     /**
-     *
+     * A wrapper for the String {@link String#substring(int, int)} methods.
      */
     public static class StringManipulator {
 
@@ -209,13 +225,14 @@ public class chalmersw16 {
 
         private static List<Riddle> fetchRiddles() {
             List<Riddle> riddles = new ArrayList<>();
-            // TODO: 11/27/2017 Populate with riddles
             riddles.add(new Riddle("What is black and white and red all over?",
-                    "a barber's rag"));
+                    "A barber's rag"));
             riddles.add(new Riddle("What is red and yellow and blue all over?",
-                    "a rainbow"));
-            riddles.add(new Riddle("", ""));
-            riddles.add(new Riddle("", ""));
+                    "A rainbow"));
+            riddles.add(new Riddle("Who are you going to call?",
+                    "Ghostbusters"));
+            riddles.add(new Riddle("What gets dirtier the whiter it gets?",
+                    "a whiteboard"));
             return riddles;
         }
     }
