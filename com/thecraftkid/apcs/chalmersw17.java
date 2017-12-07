@@ -13,21 +13,20 @@ public class chalmersw17 {
         Reader reader = new Reader();
         double radius = reader.getRadius();
         double circleArea = calculateArea(radius);
-        System.out.println();
-        System.out.printf("Area is %s", circleArea);
-        System.out.println();
+        System.out.printf("Area is %s\n\n", circleArea);
         int sideA = reader.getLength();
         int sideB = reader.getLength();
         double rectArea = calculateArea(sideA, sideB);
-        System.out.println();
-        System.out.printf("The area of the rectangle is %s", rectArea);
+        System.out.printf("The area of the rectangle is %s\n\n", rectArea);
 
         Converter converter = new Converter();
         char character = reader.getChar();
         reader.printResults(character,
                 converter.charToInt(character),
                 converter.convertToDouble(character));
-        reader.printResults();
+        int wholeNumber = reader.getWholeNumber();
+        double decminalNumber = reader.getDecimalNumber();
+
 
     }
 
@@ -107,8 +106,8 @@ public class chalmersw17 {
         }
 
         public void printResults(Object... objects) {
-            System.out.println();
             System.out.printf("%1$s equals %2$s and %3$s", objects[0], objects[1], objects[2]);
+            System.out.println();
         }
     }
 
