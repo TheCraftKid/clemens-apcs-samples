@@ -25,8 +25,9 @@ public class chalmersw17 {
                 converter.charToInt(character),
                 converter.convertToDouble(character));
         int wholeNumber = reader.getWholeNumber();
+        // todo: equals letter, decimal nunmber
         double decminalNumber = reader.getDecimalNumber();
-
+        // todo: equals letter, whole number
 
     }
 
@@ -47,7 +48,7 @@ public class chalmersw17 {
         }
 
         public String readString(String prompt) {
-            System.out.println(prompt);
+            System.out.print(prompt);
             String result;
             try {
                 result = mScanner.next();
@@ -89,12 +90,12 @@ public class chalmersw17 {
         }
 
         public int getLength() {
-            return readInt("What is the height of the rectangle?");
+            return readInt("What is the height of the rectangle? ");
         }
 
         public char getChar() {
             System.out.println("Enter a character: ");
-            return (char) mScanner.nextInt();
+            return mScanner.next().charAt(0);
         }
 
         public int getWholeNumber() {
