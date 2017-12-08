@@ -33,14 +33,23 @@ public class chalmersw18 {
     }
 
     public static List<Integer> findPrimeFactors(int n) {
-        // TODO: 12/7/2017 Finish me
+
         return new ArrayList<>();
     }
 
+    /**
+     * Computes the Fibonacci number for the given input.
+     * <p>
+     * More specifically, this computes a number such that the returned value
+     * is the sum of the returned value of the number minus 1
+     * </p>
+     *
+     * @param n
+     */
     public static int findFibonacci(int n) {
-        if (n == 1) {
+        if (n < 1) {
             return 1;
         }
-        return n + findFibonacci(n - 1);
+        return findFibonacci(n - 1) + findFibonacci(n - 2);
     }
 }
