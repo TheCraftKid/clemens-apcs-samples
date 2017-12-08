@@ -26,8 +26,10 @@ public class chalmersw17 {
                 converter.convertToDouble(character));
         int wholeNumber = reader.getWholeNumber();
         // todo: equals letter, decimal nunmber
+        System.out.println("That equals " + (char) wholeNumber + " and " + (double) wholeNumber);
         double decminalNumber = reader.getDecimalNumber();
         // todo: equals letter, whole number
+        System.out.println("That equals " + (char) decminalNumber + " and " + (int) decminalNumber);
 
     }
 
