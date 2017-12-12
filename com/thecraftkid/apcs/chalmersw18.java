@@ -1,10 +1,11 @@
 package com.thecraftkid.apcs;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /**
- * A program that finds the prime factors of a user defined integer.
+ * A program that finds the prime factors of a user defined integer and finds
+ * the Fibonacci number for a given integer.
  *
  * @author Willie Chalmers III
  * @since 12/7/17
@@ -20,6 +21,9 @@ public class chalmersw18 {
         System.out.printf("It's %s\n", findFibonacci(given));
     }
 
+    /**
+     * Returns a number inputted into the console by the user.
+     */
     public static int getNumber() {
         System.out.print("Input a number: ");
         int number;
@@ -33,6 +37,10 @@ public class chalmersw18 {
         return number;
     }
 
+    /**
+     * Prints out prime factors for a given integer.
+     * TODO: Add prime factors to list and return that
+     */
     public static void findPrimeFactors(int n) {
         int d = 0;
         for (int i = 2; i < n / 2; i++) { // Start at first prime integer, end halfway
