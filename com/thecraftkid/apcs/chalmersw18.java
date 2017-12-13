@@ -1,6 +1,8 @@
 package com.thecraftkid.apcs;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -52,6 +54,15 @@ public class chalmersw18 {
             }
             System.out.println(n);
         }
+    }
+
+    /**
+     * Return the prime factors for the given integer.
+     */
+    public static List<Integer> findPrimeFactorsNonRecursively(int n) {
+        List<Integer> primeFactors = new ArrayList<>();
+        // TODO: Finish me
+        return primeFactors;
     }
 
     /**
