@@ -57,7 +57,7 @@ public class chalmersw18 {
     }
 
     /**
-     * Return the prime factors for the given integer.
+     * Returns the prime factors for the given integer.
      */
     public static List<Integer> findPrimeFactorsNonRecursively(int n) {
         List<Integer> primeFactors = new ArrayList<>();
