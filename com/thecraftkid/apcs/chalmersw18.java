@@ -61,14 +61,10 @@ public class chalmersw18 {
      */
     public static List<Integer> findPrimeFactorsNonRecursively(int n) {
         List<Integer> primeFactors = new ArrayList<>();
-        boolean found = false;
-        while (!found) {
-            for (int i = 0; i < n / 2; i++) {
-                if (n / i == 0) {
-
-                }
+        for (int i = 2; i < n / 2; i++) {
+            if (!(n / i == 0)) { // Test if i is multiple of n
+                primeFactors.add(i);
             }
-            // TODO: Finish me
         }
         return primeFactors;
     }
@@ -80,7 +76,7 @@ public class chalmersw18 {
      * is the sum of the returned value of the number minus 1.
      * </p>
      *
-     * @param n
+     * @param n The nth Fibonacci number in the sequence
      */
     public static int findFibonacci(int n) {
         if (n < 1) {
