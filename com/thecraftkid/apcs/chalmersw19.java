@@ -1,17 +1,24 @@
 package com.thecraftkid.apcs;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.thecraftkid.apcs.chalmersw07.Student;
 
+/**
+ * An application that displays {@link Student} objects ID's and average
+ * grades on the screen.
+ */
 public class chalmersw19 extends Panel {
 
     private static final int START_X = 16;
     private static final int START_Y = 16;
 
-    private static final int RECT_WIDTH = 128;
-    private static final int RECT_HEIGHT = 32;
+    private static final int RECT_WIDTH = 240;
+    private static final int RECT_HEIGHT = 128;
 
     private static final int TEXT_PADDING = 8;
     private static final int MARGIN = 16;
@@ -34,12 +41,10 @@ public class chalmersw19 extends Panel {
 
     public static void main(String[] args) {
         Frame f = new Frame();
-        f.addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent e) {
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
-
-            ;
         });
         chalmersw19 window = new chalmersw19();  //change chalmersw19 to your file name   (twice in this line)
         window.setSize(1050, 700);
@@ -51,6 +56,28 @@ public class chalmersw19 extends Panel {
     }
 
     private Student[][] desks;
+
+    private boolean initPaint = true;
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (initPaint) {
+            g.setColor(Color.GRAY);
+            g.fillRect(0, 0, getSize().height, getSize().width);
+            initPaint = false;
+        }
+        draw(g, desks);
+        try {
+            Thread.sleep(20);
+        } catch (Exception ignored) {
+        }
+        repaint();
+    }
+
+    private static int generateRandomNumber() {
+        return ThreadLocalRandom.current().nextInt(1, 5);
+    }
 
     /**
      * Initializes some instance variables for this program.
@@ -64,21 +91,11 @@ public class chalmersw19 extends Panel {
      * Generates a 5 x 5 array of {@link Student}s.
      */
     public static Student[][] getFilledArray() {
-        Student[][] students = new Student[5][5];
+        Student[][] students = new Student[generateRandomNumber()][generateRandomNumber()];
         for (Student[] student : students) {
             Arrays.fill(student, new Student());
         }
         return students;
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        draw(g, desks);
-        try {
-            Thread.sleep(20);
-        } catch (Exception ignored) {
-        }
-        repaint();
     }
 
     /**
@@ -96,13 +113,15 @@ public class chalmersw19 extends Panel {
                 int currentY = START_Y + j * (RECT_HEIGHT + MARGIN);
                 g.setColor(Color.getColor("#E0E0E0"));
                 g.drawRect(currentX, currentY, RECT_WIDTH, RECT_HEIGHT);
-                g.drawString(student.getId(), currentX + TEXT_PADDING, currentY + TEXT_PADDING);
-                g.drawString(String.valueOf(student.getTestAverage()),
-                        (currentX + RECT_WIDTH) - TEXT_PADDING,
-                        (currentY + RECT_HEIGHT) - 10);
+//                g.setColor(Color.BLACK);
+                g.setFont(Font.getFont(Font.SANS_SERIF));
+                String displayId = String.format("ID: %s", student.getId());
+                g.drawString(displayId, currentX + TEXT_PADDING, currentY + TEXT_PADDING + 10);
+                String displayAverage = String.format("%.2f%n", student.getTestAverage());
+                g.drawString(displayAverage,
+                        (currentX + RECT_WIDTH) - 100,
+                        (currentY + RECT_HEIGHT) + TEXT_PADDING);
             }
-
         }
     }
-
 }
