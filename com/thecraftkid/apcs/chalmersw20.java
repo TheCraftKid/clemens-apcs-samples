@@ -3,7 +3,6 @@ package com.thecraftkid.apcs;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static com.thecraftkid.apcs.chalmersw07.Student;
 
@@ -74,10 +73,6 @@ public class chalmersw20 extends Panel {
         } catch (Exception ignored) {
         }
         repaint();
-    }
-
-    private static int generateRandomNumber() {
-        return ThreadLocalRandom.current().nextInt(1, 5);
     }
 
     /**
