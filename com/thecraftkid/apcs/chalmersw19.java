@@ -50,6 +50,7 @@ public class chalmersw19 extends Panel {
         window.setSize(1050, 700);
         f.add(window);
         f.pack();
+        f.setTitle("Lab 19");
         window.init();
         f.setSize(1050, 700);/*size of frame*/
         f.setVisible(true);
@@ -92,8 +93,10 @@ public class chalmersw19 extends Panel {
      */
     public static Student[][] getFilledArray() {
         Student[][] students = new Student[generateRandomNumber()][generateRandomNumber()];
-        for (Student[] student : students) {
-            Arrays.fill(student, new Student());
+        for (int i = 0; i < students.length; i++) {
+            for (int j = 0; j < students[i].length; j++) {
+                students[i][j] = new Student();
+            }
         }
         return students;
     }
@@ -109,18 +112,22 @@ public class chalmersw19 extends Panel {
             Student[] row = students[i];
             for (int j = 0; j < row.length; j++) {
                 Student student = row[j];
+                if (student == null) {
+                    continue;
+                }
                 int currentX = START_X + i * (RECT_WIDTH + MARGIN);
                 int currentY = START_Y + j * (RECT_HEIGHT + MARGIN);
                 g.setColor(Color.getColor("#E0E0E0"));
                 g.drawRect(currentX, currentY, RECT_WIDTH, RECT_HEIGHT);
-//                g.setColor(Color.BLACK);
+                g.setColor(Color.BLACK);
                 g.setFont(Font.getFont(Font.SANS_SERIF));
+                double testAverage = student.getTestAverage();
                 String displayId = String.format("ID: %s", student.getId());
                 g.drawString(displayId, currentX + TEXT_PADDING, currentY + TEXT_PADDING + 10);
-                String displayAverage = String.format("%.2f%n", student.getTestAverage());
+                String displayAverage = String.format("Average: %.2f%n", testAverage);
                 g.drawString(displayAverage,
-                        (currentX + RECT_WIDTH) - 100,
-                        (currentY + RECT_HEIGHT) + TEXT_PADDING);
+                        (currentX + RECT_WIDTH) - TEXT_PADDING - 80,
+                        (currentY + RECT_HEIGHT) - TEXT_PADDING);
             }
         }
     }
