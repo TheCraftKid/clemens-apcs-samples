@@ -251,29 +251,6 @@ public class chalmersw14 {
          */
         public void shuffle() {
             Collections.shuffle(this); // Can't I just do this?
-//            List<ChalmersCard> copy = new ArrayList<>();
-//            Collections.copy(copy, this);
-//            List<Integer> randoms = generateRandomPositions();
-//            randoms.forEach(random -> {
-//
-//            });
-        }
-
-        /**
-         * Generates a list of
-         *
-         * @deprecated {@link #shuffle()} is a better implementation of a list shuffler.
-         */
-        @Deprecated
-        private List<Integer> generateRandomPositions() {
-            List<Integer> randoms = new ArrayList<>();
-            while (randoms.size() <= 52) {
-                int nextRandom = ThreadLocalRandom.current().nextInt(0, 52 + 1);
-                if (randoms.indexOf(nextRandom) == -1) { // If it's not in the list, add it.
-                    randoms.add(nextRandom);
-                }
-            }
-            return randoms;
         }
 
         public ChalmersCard pullCard() {
