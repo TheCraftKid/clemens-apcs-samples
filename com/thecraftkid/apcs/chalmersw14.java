@@ -348,6 +348,10 @@ public class chalmersw14 {
             return face + suit;
         }
 
+        public int getValue() {
+            return value;
+        }
+
         /**
          * Compares the face and suit of the given card to this one for sorting.
          *
