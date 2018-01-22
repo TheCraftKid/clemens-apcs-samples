@@ -12,6 +12,7 @@ public class chalmersw21 {
 
     public static void main(String[] args) {
         BlackjackGame game = new BlackjackGame(new InputCallback() {
+
             @Override
             public int onBetRequest() {
                 return getNumberInput("Your bet?");
@@ -43,13 +44,23 @@ public class chalmersw21 {
         game.setDisplayCallback(new DisplayCallback() {
 
             @Override
-            public void onDisplayCards(ChalmersCard... cards) {
+            public void onDisplayPlayerCards(ChalmersCard... cards) {
                 System.out.printf("Your cards are %s, %s", cards[0], cards[1]);
             }
 
             @Override
-            public void onPullCard(ChalmersCard card) {
+            public void onDisplayDealerCards(ChalmersCard... cards) {
+
+            }
+
+            @Override
+            public void onPlayerPullCard(ChalmersCard card) {
                 System.out.printf("You pulled a %s\n", card);
+            }
+
+            @Override
+            public void onDealerPullCard(ChalmersCard card) {
+
             }
 
             @Override
@@ -108,6 +119,7 @@ public class chalmersw21 {
 
         public BlackjackGame(InputCallback callback) {
             this.callback = callback;
+            this.deck.fill();
         }
 
         public void setDisplayCallback(DisplayCallback callback) {
@@ -130,10 +142,14 @@ public class chalmersw21 {
                 ChalmersCard[] playerCards = new ChalmersCard[2];
                 playerCards[0] = deck.pullCard();
                 playerCards[1] = deck.pullCard();
-                boolean busted = startBetting(playerCards);
-                if (busted) {
-
+                BetResult result = startBetting(playerCards);
+                if (result.isBusted()) {
+                    if (displayCallback != null) {
+                        displayCallback.onBust(result.getLastGoodValue(), result.getBustedValue());
+                    }
                 }
+                BetResult dealerResult = startDealerRound(dealerCards);
+                displayCallback.onDisplayDealerCards();
             }
         }
 
@@ -143,29 +159,77 @@ public class chalmersw21 {
          * @param playerCards Length <= 2
          * @return True if the player busted
          */
-        private boolean startBetting(ChalmersCard... playerCards) {
+        private BetResult startBetting(ChalmersCard... playerCards) {
             List<ChalmersCard> cards = Arrays.stream(playerCards).collect(Collectors.toList());
-            displayCallback.onDisplayCards(playerCards);
+            displayCallback.onDisplayPlayerCards(playerCards);
             Move nextMove = callback.onMove();
             int total = cards.get(0).getValue() + cards.get(1).getValue();
             int lastValue = 0;
+            int bustedValue = BetResult.NOT_BUSTED;
             while (total < 21) {
                 lastValue = total;
                 if (nextMove == Move.HIT) {
                     ChalmersCard newCard = deck.pullCard();
-                    displayCallback.onPullCard(newCard);
-                    lastValue += newCard.getValue();
+                    displayCallback.onPlayerPullCard(newCard);
+                    bustedValue = (lastValue += newCard.getValue());
                 } else {
-                    return false;
+                    return new BetResult(false, lastValue, bustedValue);
                 }
             }
-            if (displayCallback != null) {
-                displayCallback.onBust(total, lastValue);
-            }
-            return false;
+            return new BetResult(true, lastValue, bustedValue);
         }
 
+        private BetResult startDealerRound(ChalmersCard... dealerCards) {
+            List<ChalmersCard> cards = Arrays.stream(dealerCards).collect(Collectors.toList());
+            displayCallback.onDisplayDealerCards(dealerCards);
+            int lastValue = cards.get(0).getValue() + cards.get(1).getValue();
+            int bustedValue = BetResult.NOT_BUSTED;
+            while (lastValue <= 17) {
+                lastValue += deck.pullCard().getValue();
+                if (lastValue > 21) {
+                    bustedValue = lastValue;
+                }
+            }
+            boolean isBusted = bustedValue != BetResult.NOT_BUSTED;
+            return new BetResult(isBusted, lastValue, bustedValue);
+        }
 
+        /**
+         * A container for betting results.
+         *
+         * @see DisplayCallback#onBust(int, int)
+         */
+        private static class BetResult {
+
+            public static final int NOT_BUSTED = -1;
+
+            private final boolean busted;
+
+            private final int lastGoodValue;
+
+            private final int bustedValue;
+
+            private BetResult(boolean busted, int lastGoodValue, int bustedValue) {
+                this.busted = busted;
+                this.lastGoodValue = lastGoodValue;
+                this.bustedValue = bustedValue;
+            }
+
+            public boolean isBusted() {
+                return busted;
+            }
+
+            public int getLastGoodValue() {
+                return lastGoodValue;
+            }
+
+            /**
+             * @return -1 if the player did not bust
+             */
+            public int getBustedValue() {
+                return bustedValue;
+            }
+        }
     }
 
     /**
@@ -194,18 +258,32 @@ public class chalmersw21 {
     public interface DisplayCallback {
 
         /**
-         * Prints the given cards to standard output.
+         * Prints the player's cards to standard output.
          *
-         * @param cards The user's current cards.
+         * @param cards The player's current cards.
          */
-        void onDisplayCards(ChalmersCard... cards);
+        void onDisplayPlayerCards(ChalmersCard... cards);
+
+        /**
+         * Prints the dealer's cards to standard output.
+         *
+         * @param cards The dealer's current cards
+         */
+        void onDisplayDealerCards(ChalmersCard... cards);
 
         /**
          * Prints the given card to standard output.
          *
          * @param card A card most recently pulled by the user
          */
-        void onPullCard(ChalmersCard card);
+        void onPlayerPullCard(ChalmersCard card);
+
+        /**
+         * Prints the given card to standard output.
+         *
+         * @param card A card most recently pulled by the user
+         */
+        void onDealerPullCard(ChalmersCard card);
 
         /**
          * Notifies this callback that the player has passed total card value
