@@ -14,13 +14,23 @@ public class chalmersw21 {
         BlackjackGame game = new BlackjackGame(new InputCallback() {
 
             @Override
-            public int onBetRequest() {
-                return getNumberInput("Your bet?");
+            public int onBetRequest(int max) {
+                int bet = getNumberInput(String.format("Your bet? You only have $%s.", max));
+                while (bet > max) {
+                    bet = getNumberInput(String.format("You don't have $%s", bet));
+                }
+                return bet;
             }
 
             @Override
             public Move onMove() {
                 return requestMove();
+            }
+
+            @Override
+            public boolean onGameEnd() {
+
+                return false;
             }
 
             /**
@@ -49,6 +59,16 @@ public class chalmersw21 {
                 return move;
             }
 
+            private boolean requestPlayAgain() {
+                String output = getStringInput("Would you like to play again? (y/N)");
+                boolean result = false;
+                try {
+                    result = Boolean.valueOf(output);
+                } catch (Exception e) {
+                    result = requestPlayAgain();
+                }
+                return result;
+            }
         });
         game.setDisplayCallback(new DisplayCallback() {
 
@@ -126,6 +146,8 @@ public class chalmersw21 {
 
     public static class BlackjackGame {
 
+        public static final int MAX_BET = 100;
+
         private static final int STARTING_AMOUNT = 100;
 
         private int funds = STARTING_AMOUNT;
@@ -154,8 +176,11 @@ public class chalmersw21 {
          * then showing the user his/her cards.
          */
         public void start() {
-            int playerBet;
-            while ((playerBet = callback.onBetRequest()) > 0 && playerBet < funds) {
+            int playerBet = callback.onBetRequest(funds);
+            while (playerBet > 0) {
+                if (playerBet > funds) {
+                    callback.onTooLargeBetRequest(funds);
+                }
                 // Start player round
                 ChalmersCard[] playerCards = generateStartingPair();
                 displayPlayerCards(playerCards);
@@ -174,6 +199,47 @@ public class chalmersw21 {
             dealerCards[0] = deck.pullCard();
             dealerCards[1] = deck.pullCard();
             return dealerCards;
+        }
+
+        /**
+         * Begins the standard blackjack loop of asking the user to hit or stand.
+         *
+         * @param playerCards Length <= 2
+         * @return True if the player busted
+         */
+        private RoundResult startBetting(ChalmersCard... playerCards) {
+            List<ChalmersCard> cards = Arrays.stream(playerCards).collect(Collectors.toList());
+            Move nextMove = callback.onMove();
+            int total = cards.get(0).getValue() + cards.get(1).getValue();
+            int lastValue = 0;
+            int bustedValue = RoundResult.NOT_BUSTED;
+            while (total < 21) {
+                lastValue = total;
+                if (nextMove == Move.HIT) {
+                    ChalmersCard newCard = deck.pullCard();
+                    displayCallback.onPlayerPullCard(newCard);
+                    bustedValue = (lastValue += newCard.getValue());
+                } else {
+                    return new RoundResult(false, lastValue, bustedValue);
+                }
+            }
+            return new RoundResult(true, lastValue, bustedValue);
+        }
+
+        private RoundResult startDealerRound(ChalmersCard... dealerCards) {
+            List<ChalmersCard> cards = Arrays.stream(dealerCards).collect(Collectors.toList());
+            int lastValue = cards.get(0).getValue() + cards.get(1).getValue();
+            int bustedValue = RoundResult.NOT_BUSTED;
+            while (lastValue <= 17) {
+                ChalmersCard card = deck.pullCard();
+
+                lastValue += card.getValue();
+                if (lastValue > 21) {
+                    bustedValue = lastValue;
+                }
+            }
+            boolean isBusted = bustedValue != RoundResult.NOT_BUSTED;
+            return new RoundResult(isBusted, lastValue, bustedValue);
         }
 
         /**
@@ -218,47 +284,6 @@ public class chalmersw21 {
             if (displayCallback != null) {
                 displayCallback.onDisplayDealerCards(cards);
             }
-        }
-
-        /**
-         * Begins the standard blackjack loop of asking the user to hit or stand.
-         *
-         * @param playerCards Length <= 2
-         * @return True if the player busted
-         */
-        private RoundResult startBetting(ChalmersCard... playerCards) {
-            List<ChalmersCard> cards = Arrays.stream(playerCards).collect(Collectors.toList());
-            Move nextMove = callback.onMove();
-            int total = cards.get(0).getValue() + cards.get(1).getValue();
-            int lastValue = 0;
-            int bustedValue = RoundResult.NOT_BUSTED;
-            while (total < 21) {
-                lastValue = total;
-                if (nextMove == Move.HIT) {
-                    ChalmersCard newCard = deck.pullCard();
-                    displayCallback.onPlayerPullCard(newCard);
-                    bustedValue = (lastValue += newCard.getValue());
-                } else {
-                    return new RoundResult(false, lastValue, bustedValue);
-                }
-            }
-            return new RoundResult(true, lastValue, bustedValue);
-        }
-
-        private RoundResult startDealerRound(ChalmersCard... dealerCards) {
-            List<ChalmersCard> cards = Arrays.stream(dealerCards).collect(Collectors.toList());
-            int lastValue = cards.get(0).getValue() + cards.get(1).getValue();
-            int bustedValue = RoundResult.NOT_BUSTED;
-            while (lastValue <= 17) {
-                ChalmersCard card = deck.pullCard();
-
-                lastValue += card.getValue();
-                if (lastValue > 21) {
-                    bustedValue = lastValue;
-                }
-            }
-            boolean isBusted = bustedValue != RoundResult.NOT_BUSTED;
-            return new RoundResult(isBusted, lastValue, bustedValue);
         }
 
 
@@ -310,7 +335,7 @@ public class chalmersw21 {
          *
          * @return The amount of dollars the player has bet for the next turn
          */
-        int onBetRequest();
+        int onBetRequest(int max);
 
         /**
          * Requests a user's selection for the next turn in blackjack.
@@ -318,6 +343,22 @@ public class chalmersw21 {
          * @return An always non-null {@link Move}
          */
         Move onMove();
+
+        /**
+         * Called when the game has ended.
+         *
+         * @return True if the game should restart
+         */
+        boolean onGameEnd();
+
+        /**
+         * Notifies this callback that the provided bet in {@link #onBetRequest(int)} was too large.
+         * <p>
+         * By default, the limit is
+         */
+        default void onTooLargeBetRequest(int max) {
+            onBetRequest(max);
+        }
     }
 
     /**
