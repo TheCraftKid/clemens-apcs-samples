@@ -34,8 +34,7 @@ public class chalmersw21 {
             @Override
             public boolean onGameEnd() {
                 System.out.println("You");
-                requestPlayAgain();
-                return false;
+                return requestPlayAgain();
             }
 
             @Override
@@ -72,7 +71,7 @@ public class chalmersw21 {
 
             private boolean requestPlayAgain() {
                 String output = getStringInput("Would you like to play again? (y/N)");
-                boolean result = false;
+                boolean result;
                 try {
                     result = Boolean.valueOf(output);
                 } catch (Exception e) {
@@ -90,7 +89,7 @@ public class chalmersw21 {
 
             @Override
             public void onDisplayDealerCards(ChalmersCard... cards) {
-                System.out.printf("Dealer has %s and %s\n", cards[0], cards[1]);
+                System.out.printf("Dealer has %s \n", cards[0]);
             }
 
             @Override
@@ -110,13 +109,16 @@ public class chalmersw21 {
             }
 
             @Override
-            public void onSuccessfulDealerRound(int lastValue) {
+            public void onSuccessfulDealerRound(int lastValue, int playerCurrentFunds) {
                 System.out.printf("Dealer stopped at %s.\n", lastValue);
+                System.out.println("You busted, buddy.");
+                System.out.printf("You now have $%s in your wallet.\n\n", playerCurrentFunds);
             }
 
             @Override
-            public void onSuccessfulPlayerRound(int lastValue) {
+            public void onSuccessfulPlayerRound(int lastValue, int playerCurrentFunds) {
                 System.out.printf("You didn't bust! Last value: %s\n", lastValue);
+                System.out.printf("You now have $%s in your wallet.\n\n", playerCurrentFunds);
             }
         });
         game.play();
@@ -234,6 +236,20 @@ public class chalmersw21 {
             return new RoundResult(true, lastValue, bustedValue);
         }
 
+        /**
+         * Handles the ace case in blackjack.
+         *
+         * @param card A non-null card
+         * @return The value of the card if the player's deck with the given
+         * card won't bust - 1 otherwise
+         */
+        private static int determineGameValue(ChalmersCard card, int deckValue) {
+            if ("A".equals(card.getFace())) {
+                return deckValue + card.getValue() > 21 ? 1 : card.getValue();
+            }
+            return card.getValue();
+        }
+
         private void displayPulledCard(ChalmersCard newCard) {
             if (displayCallback != null) {
                 displayCallback.onPlayerPullCard(newCard);
@@ -264,7 +280,7 @@ public class chalmersw21 {
                 if (result.isBusted()) {
                     displayCallback.onBust(result.getLastGoodValue(), result.getBustedValue());
                 } else {
-                    displayCallback.onSuccessfulDealerRound(result.getLastGoodValue());
+                    displayCallback.onSuccessfulPlayerRound(result.getLastGoodValue(), this.funds);
                 }
             }
         }
@@ -277,7 +293,7 @@ public class chalmersw21 {
                 if (result.isBusted()) {
                     displayCallback.onBust(result.getLastGoodValue(), result.getBustedValue());
                 } else {
-                    displayCallback.onSuccessfulDealerRound(result.getLastGoodValue());
+                    displayCallback.onSuccessfulDealerRound(result.getLastGoodValue(), this.funds);
                 }
             }
         }
@@ -419,14 +435,22 @@ public class chalmersw21 {
         void onBust(int lastValue, int bustValue);
 
         /**
-         * Notifies this callback that the playing agent has not busted.
+         * Notifies this callback that the dealer has not busted, and the
+         * player has busted.
          *
          * @param lastValue The sum of card values the agent had before
          *                  he/she busted.
          */
-        void onSuccessfulDealerRound(int lastValue);
+        void onSuccessfulDealerRound(int lastValue, int playerCurrentFunds);
 
-        void onSuccessfulPlayerRound(int lastValue);
+        /**
+         * Notifies this callback that the playing agent has not busted.
+         *
+         * @param lastValue          The sum of card values the agent had before
+         *                           he/she busted.
+         * @param playerCurrentFunds The amount of money the player currently has
+         */
+        void onSuccessfulPlayerRound(int lastValue, int playerCurrentFunds);
     }
 
     /**
