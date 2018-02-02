@@ -3,9 +3,7 @@ package com.thecraftkid.apcs;
 import com.thecraftkid.apcs.chalmersw14.ChalmersCard;
 import com.thecraftkid.apcs.chalmersw14.Deck;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -202,6 +200,8 @@ public class chalmersw21 {
                 displayDealerCards(dealerCards);
                 RoundResult dealerResult = startDealerRound(dealerCards);
                 displayDealerRoundResults(dealerResult);
+                List<ChalmersCard> things = new ArrayList<>();
+                Collections.addAll(things, dealerCards);
             }
             callback.onGameEnd();
         }
@@ -228,7 +228,7 @@ public class chalmersw21 {
                 if (nextMove == Move.HIT) {
                     ChalmersCard newCard = deck.pullCard();
                     displayPulledCard(newCard);
-                    bustedValue = (lastValue += newCard.getValue());
+                    bustedValue = (lastValue += determineGameValue(newCard, lastValue));
                 } else {
                     return new RoundResult(false, lastValue, bustedValue);
                 }

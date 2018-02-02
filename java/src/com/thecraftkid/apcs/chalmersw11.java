@@ -188,7 +188,7 @@ public class chalmersw11 {
         }
 
         /**
-         * @return A pair representing the start and end position for a copy operation, respectively
+         * @return A pair representing the play and end position for a copy operation, respectively
          */
         public Map.Entry<Integer, Integer> generateCloneInformation() {
             int start = getNumberInput("Position of student to clone?");
